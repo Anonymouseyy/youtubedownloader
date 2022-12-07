@@ -54,6 +54,10 @@ def download_video(url, t, path):
         ydl.download([url])
 
 
+def download_playlist(url, t, path, s, e):
+    pass
+
+
 # Create the Window
 vid_layout = [[sg.Text('YouTube URL:', font=('Helvetica', 20)), sg.Input(key='url', font=('Helvetica', 20))]]
 playlist_layout = [[sg.Text('Youtube Playlist:', font=('Helvetica', 20)),
@@ -98,7 +102,23 @@ while True:
                 if cur_layout == 'vid':
                     download_video(values['url'], values['type'], values['fpath'])
                 else:
-                    pass
+                    start = None
+                    end = None
+                    if not values['start_idx']:
+                        start = 0
+                    if not values['end_idx']:
+                        end = -1
+
+                    if start is None:
+                        try: start = int(values['start_idx'])
+                        finally: pass
+                    if end is None:
+                        try: end = int(values['end_idx'])
+                        finally: pass
+
+                    if start is not None and end is not None:
+                        download_playlist(values['list_url'], values['type'], values['fpath'], start, end)
+
 
 window.close()
 sys.exit()
