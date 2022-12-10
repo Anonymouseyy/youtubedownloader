@@ -41,13 +41,19 @@ def what_is(url):
 def download_video(url, t, path):
     if t == 'Audio':
         ydl_opts = {
-            'format': 'mp3/bestaudio/best',
-            'outtmpl': f'{path}/%(title)s.mp3',
+            'ffmpeg_location': 'C:/ffmpeg/bin',
+            'format': 'bestaudio/best',
+            'audioformat': 'mp3',
+            'outtmpl': f'{path}/%(title)s.%(ext)s',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+            }]
         }
     else:
         ydl_opts = {
             'format': 'mp4/bestvideo/best',
-            'outtmpl': f'{path}/%(title)s.mp4',
+            'outtmpl': f'{path}/%(title)s.%(ext)s',
         }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -55,7 +61,29 @@ def download_video(url, t, path):
 
 
 def download_playlist(url, t, path, s, e):
-    pass
+    if t == 'Audio':
+        ydl_opts = {
+            'ffmpeg_location': 'C:/ffmpeg/bin',
+            'format': 'bestaudio/best',
+            'outtmpl': f'{path}/%(title)s.%(ext)s',
+            'audioformat': 'mp3',
+            'playliststart': s,
+            'playlistend': e,
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+            }]
+        }
+    else:
+        ydl_opts = {
+            'format': 'mp4/bestvideo/best',
+            'outtmpl': f'{path}/%(title)s.%(ext)s',
+            'playliststart': s,
+            'playlistend': e,
+        }
+
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
 
 
 # Create the Window
@@ -99,25 +127,25 @@ while True:
     if event == 'Download':
         if values['type'] and values['fpath']:
             if cur_layout == what_is(values['url']):
-                if cur_layout == 'vid':
-                    download_video(values['url'], values['type'], values['fpath'])
-                else:
-                    start = None
-                    end = None
-                    if not values['start_idx']:
-                        start = 0
-                    if not values['end_idx']:
-                        end = -1
+                download_video(values['url'], values['type'], values['fpath'])
+            elif cur_layout == what_is(values['list_url']):
+                print('yes')
+                start = None
+                end = None
+                if not values['start_idx']:
+                    start = 1
+                if not values['end_idx']:
+                    end = -1
 
-                    if start is None:
-                        try: start = int(values['start_idx'])
-                        finally: pass
-                    if end is None:
-                        try: end = int(values['end_idx'])
-                        finally: pass
+                if start is None:
+                    try: start = int(values['start_idx'])
+                    finally: pass
+                if end is None:
+                    try: end = int(values['end_idx'])
+                    finally: pass
 
-                    if start is not None and end is not None:
-                        download_playlist(values['list_url'], values['type'], values['fpath'], start, end)
+                if start is not None and end is not None:
+                    download_playlist(values['list_url'], values['type'], values['fpath'], start, end)
 
 
 window.close()
