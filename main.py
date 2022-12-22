@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-import sys, yt_dlp
+import sys, yt_dlp, music_tag
 
 errors = 0
 currently_downloading = False
@@ -38,6 +38,26 @@ def what_is(url):
         return 'vid'
 
 
+def set_audio_metadata(data):
+    f = music_tag.load_file(data['requested_downloads'][0]['filepath'])
+
+    fields = ['track', 'artist', 'album', 'release_year']
+
+    for i in fields:
+        if data[f'{i}']:
+            if i == 'track':
+                f['tracktitle'] = data['track']
+                print(data['track'])
+            elif i == 'release_year':
+                f['year'] = data[f'{i}']
+                print(data[f'{i}'])
+            else:
+                f[f'{i}'] = data[f'{i}']
+                print(data[f'{i}'])
+
+    f.save()
+
+
 def download_video(url, t, path):
     if t == 'Audio':
         ydl_opts = {
@@ -57,7 +77,10 @@ def download_video(url, t, path):
         }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+        metadata = ydl.extract_info(url)
+
+    print(metadata)
+    set_audio_metadata(metadata)
 
 
 def download_playlist(url, t, path, s, e):
