@@ -177,9 +177,9 @@ while True:
 
     if event == 'Download':
         if values['type'] and values['fpath']:
-            if cur_layout == what_is(values['url']):
+            if cur_layout == what_is(values['url']) and cur_layout == 'vid':
                 download_video(values['url'], values['type'], values['fpath'])
-            elif cur_layout == what_is(values['list_url']):
+            elif cur_layout == what_is(values['list_url']) and cur_layout == 'playlist':
                 print('yes')
                 start = None
                 end = None
