@@ -1,3 +1,8 @@
-yt-dlp
-pysimplegui
-music-tag
+Brotli==1.0.9
+certifi==2022.9.24
+music-tag==0.4.3
+mutagen==1.46.0
+pycryptodomex==3.16.0
+PySimpleGUI==4.60.4
+websockets==10.4
+yt-dlp==2022.11.11
