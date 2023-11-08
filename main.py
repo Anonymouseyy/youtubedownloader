@@ -8,13 +8,13 @@ currently_downloading = False
 def what_is(url):
     # Work around to printing errors to the console
     global errors
-    errors = 0
+    errors = ""
 
     class ignoreErrors:
         @staticmethod
         def error(msg):
             global errors
-            errors += 1
+            errors += msg
 
         @staticmethod
         def warning(msg):
@@ -29,8 +29,8 @@ def what_is(url):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.extract_info(url, False)
 
-    if errors != 0:
-        return False
+    if errors:
+        return errors
 
     if 'playlist' in url:
         return 'playlist'
@@ -177,8 +177,10 @@ while True:
 
     if event == 'Download':
         if values['type'] and values['fpath']:
+            print(what_is(values['url']))
             if cur_layout == what_is(values['url']) and cur_layout == 'vid':
                 download_video(values['url'], values['type'], values['fpath'])
+                print('yes')
             elif cur_layout == what_is(values['list_url']) and cur_layout == 'playlist':
                 print('yes')
                 start = None
