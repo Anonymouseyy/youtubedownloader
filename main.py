@@ -1,41 +1,6 @@
-import PySimpleGUI as sg
 import sys, yt_dlp, music_tag
 
-errors = 0
 currently_downloading = False
-
-
-def what_is(url):
-    # Work around to printing errors to the console
-    global errors
-    errors = ""
-
-    class ignoreErrors:
-        @staticmethod
-        def error(msg):
-            global errors
-            errors += msg
-
-        @staticmethod
-        def warning(msg):
-            pass
-
-        @staticmethod
-        def debug(msg):
-            pass
-
-    ydl_opts = {'skip_download': True, 'ignoreerrors': True, 'quiet': True, "logger": ignoreErrors, 'extract_flat': True, 'playlistend': 2}
-
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.extract_info(url, False)
-
-    if errors:
-        return errors
-
-    if 'playlist' in url:
-        return 'playlist'
-    else:
-        return 'vid'
 
 
 def set_audio_metadata(data, t):
