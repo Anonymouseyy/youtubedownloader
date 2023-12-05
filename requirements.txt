@@ -1,9 +1,11 @@
 Brotli==1.0.9
 certifi==2022.9.24
+customtkinter==5.2.1
+darkdetect==0.8.0
 music-tag==0.4.3
 mutagen==1.46.0
+packaging==23.2
 pycryptodomex==3.16.0
 PySimpleGUI==4.60.4
 websockets==10.4
 yt-dlp==2022.11.11
-PyQt6~=6.6.0
