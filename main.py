@@ -125,7 +125,16 @@ class Playlist(ctk.CTkFrame):
         self.url_label = ctk.CTkLabel(self, text="URL: ", font=("Segoe UI Bold", 14))
         self.url = ctk.CTkEntry(self, placeholder_text="URL")
         self.url_label.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nw")
-        self.url.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="ne")
+        self.url.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="nsew", columnspan=3)
+
+        self.start_label = ctk.CTkLabel(self, text="Start Index: ", font=("Segoe UI Bold", 14))
+        self.start = ctk.CTkEntry(self, placeholder_text="Leave Blank If First")
+        self.end_label = ctk.CTkLabel(self, text="End Index: ", font=("Segoe UI Bold", 14))
+        self.end = ctk.CTkEntry(self, placeholder_text="Leave Blank If Last")
+        self.start_label.grid(row=3, column=0, padx=10, pady=(0, 10), sticky="nw")
+        self.start.grid(row=3, column=1, padx=10, pady=(0, 10), sticky="nsew")
+        self.end_label.grid(row=3, column=2, padx=10, pady=(0, 10), sticky="nw")
+        self.end.grid(row=3, column=3, padx=10, pady=(0, 10), sticky="nsew")
 
 
 class App(ctk.CTk):
