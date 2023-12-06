@@ -1,4 +1,4 @@
-import sys, yt_dlp, music_tag
+import os, yt_dlp, music_tag
 import customtkinter as ctk
 currently_downloading = False
 
@@ -143,6 +143,19 @@ class Options(ctk.CTkFrame):
 
         self.title = ctk.CTkLabel(self, text="Download", font=("Segoe UI Bold", 24))
         self.title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
+
+        def browse_folder():
+            folder_path = ctk.filedialog.askdirectory()
+            if folder_path:
+                self.folder.delete(0, ctk.END)
+                self.folder.insert(ctk.END, folder_path)
+
+        self.folder_label = ctk.CTkLabel(self, text="Folder: ", font=("Segoe UI Bold", 14))
+        self.folder = ctk.CTkEntry(self, placeholder_text="Folder")
+        self.browse = ctk.CTkButton(self, text="Browse", command=browse_folder)
+        self.folder_label.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nw")
+        self.folder.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="nw")
+        self.browse.grid(row=1, column=2, padx=10, pady=(0, 10), sticky="nw")
 
 
 class App(ctk.CTk):
