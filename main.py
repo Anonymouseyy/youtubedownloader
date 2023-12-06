@@ -154,8 +154,17 @@ class Options(ctk.CTkFrame):
         self.folder = ctk.CTkEntry(self, placeholder_text="Folder")
         self.browse = ctk.CTkButton(self, text="Browse", command=browse_folder)
         self.folder_label.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nw")
-        self.folder.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="nw")
-        self.browse.grid(row=1, column=2, padx=10, pady=(0, 10), sticky="nw")
+        self.folder.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="nsew", columnspan=2)
+        self.browse.grid(row=1, column=3, padx=10, pady=(0, 10), sticky="nw")
+
+        self.kind_label = ctk.CTkLabel(self, text="Kind: ", font=("Segoe UI Bold", 14))
+        self.kind = ctk.CTkOptionMenu(self, values=["Single", "Playlist"])
+        self.format_label = ctk.CTkLabel(self, text="Format: ", font=("Segoe UI Bold", 14))
+        self.format = ctk.CTkOptionMenu(self, values=["Video", "Audio"])
+        self.kind_label.grid(row=2, column=0, padx=10, pady=(0, 10), sticky="nw")
+        self.kind.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="nw")
+        self.format_label.grid(row=2, column=2, padx=10, pady=(0, 10), sticky="nw")
+        self.format.grid(row=2, column=3, padx=10, pady=(0, 10), sticky="nw")
 
 
 class App(ctk.CTk):
