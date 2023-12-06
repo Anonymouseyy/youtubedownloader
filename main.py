@@ -23,7 +23,7 @@ def set_audio_metadata(data, t):
 
         f.save()
 
-    else:
+    elif t == 'p':
         songs = data['entries']
 
         for song in songs:
@@ -102,20 +102,34 @@ def download_playlist(url, t, path, s, e):
         set_audio_metadata(metadata, 'p')
 
 
-# Setting up the window
-app = ctk.CTk()
-ctk.set_appearance_mode("dark")
-app.title("Youtube Downloader")
-app.geometry(f"{int(app.winfo_screenwidth())//2}x{int(app.winfo_screenheight())//2}")
+class Vid(ctk.CTkFrame):
+    def __init__(self, master):
+        super().__init__(master)
 
-title = ctk.CTkLabel(app, text="Youtube Downloader", font=("Segoe UI Bold", 48))
-title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
-app.grid_columnconfigure(0, weight=1)
 
-vid_frame = ctk.CTkFrame(app)
-vid_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
+class Playlist(ctk.CTkFrame):
+    def __init__(self, master):
+        super().__init__(master)
 
-playlist_frame = ctk.CTkFrame(app)
-playlist_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
 
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        ctk.set_appearance_mode("dark")
+
+        self.title("Youtube Downloader")
+        self.geometry(f"{int(self.winfo_screenwidth())//2}x{int(self.winfo_screenheight())//2}")
+
+        self.title = ctk.CTkLabel(self, text="Youtube Downloader", font=("Segoe UI Bold", 48))
+        self.title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
+        self.grid_columnconfigure(0, weight=1)
+
+        self.vid_frame = Vid(self)
+        self.vid_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
+
+        self.playlist_frame = Playlist(self)
+        self.playlist_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
+
+
+app = App()
 app.mainloop()
