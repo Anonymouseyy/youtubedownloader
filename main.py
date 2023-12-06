@@ -108,7 +108,14 @@ ctk.set_appearance_mode("dark")
 app.title("Youtube Downloader")
 app.geometry(f"{int(app.winfo_screenwidth())//2}x{int(app.winfo_screenheight())//2}")
 
-text = ctk.CTkLabel(app, text="Youtube Downloader", font=("Segoe UI Bold", 48), pady=2)
-text.pack()
+title = ctk.CTkLabel(app, text="Youtube Downloader", font=("Segoe UI Bold", 48))
+title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
+app.grid_columnconfigure(0, weight=1)
+
+vid_frame = ctk.CTkFrame(app)
+vid_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
+
+playlist_frame = ctk.CTkFrame(app)
+playlist_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
 
 app.mainloop()
