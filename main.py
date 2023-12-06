@@ -182,14 +182,24 @@ class App(ctk.CTk):
         self.title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
         self.grid_columnconfigure(0, weight=1)
 
-        self.vid_frame = Vid(self)
-        self.vid_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
+        self.vid = Vid(self)
+        self.vid.grid(row=1, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
 
-        self.playlist_frame = Playlist(self)
-        self.playlist_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
+        self.playlist = Playlist(self)
+        self.playlist.grid(row=2, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
 
         self.options = Options(self)
         self.options.grid(row=3, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
+
+        def download():
+            print('bro')
+            if self.options.kind.get() == "Single":
+                download_video(self.vid.url.get(), self.options.format.get(), self.options.folder.get())
+            if self.options.kind.get() == "Playlist":
+                download_playlist(self.playlist.url.get(), self.options.format.get(), self.options.folder.get(),
+                                  self.playlist.start.get(), self.playlist.end.get())
+
+        self.options.download.configure(command=download)
 
 
 app = App()
