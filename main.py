@@ -106,10 +106,26 @@ class Vid(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
 
+        self.title = ctk.CTkLabel(self, text="Video", font=("Segoe UI Bold", 24))
+        self.title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
+
+        self.url_label = ctk.CTkLabel(self, text="URL: ", font=("Segoe UI Bold", 14))
+        self.url = ctk.CTkEntry(self, placeholder_text="URL")
+        self.url_label.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nw")
+        self.url.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="ne")
+
 
 class Playlist(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
+
+        self.title = ctk.CTkLabel(self, text="Playlist", font=("Segoe UI Bold", 24))
+        self.title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
+
+        self.url_label = ctk.CTkLabel(self, text="URL: ", font=("Segoe UI Bold", 14))
+        self.url = ctk.CTkEntry(self, placeholder_text="URL")
+        self.url_label.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nw")
+        self.url.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="ne")
 
 
 class App(ctk.CTk):
