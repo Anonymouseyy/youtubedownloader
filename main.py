@@ -100,3 +100,15 @@ def download_playlist(url, t, path, s, e):
 
     if t == 'Audio':
         set_audio_metadata(metadata, 'p')
+
+
+# Setting up the window
+app = ctk.CTk()
+ctk.set_appearance_mode("dark")
+app.title("Youtube Downloader")
+app.geometry(f"{int(app.winfo_screenwidth())//2}x{int(app.winfo_screenheight())//2}")
+
+text = ctk.CTkLabel(app, text="Youtube Downloader", font=("Segoe UI Bold", 48), pady=2)
+text.pack()
+
+app.mainloop()
