@@ -166,6 +166,9 @@ class Options(ctk.CTkFrame):
         self.format_label.grid(row=2, column=2, padx=10, pady=(0, 10), sticky="nw")
         self.format.grid(row=2, column=3, padx=10, pady=(0, 10), sticky="nw")
 
+        self.download = ctk.CTkButton(self, text="Download")
+        self.download.grid(row=3, column=0, padx=10, pady=(0, 10), sticky="nsew", columnspan=4)
+
 
 class App(ctk.CTk):
     def __init__(self):
