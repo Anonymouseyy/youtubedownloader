@@ -137,6 +137,14 @@ class Playlist(ctk.CTkFrame):
         self.end.grid(row=3, column=3, padx=10, pady=(0, 10), sticky="nsew")
 
 
+class Options(ctk.CTkFrame):
+    def __init__(self, master):
+        super().__init__(master)
+
+        self.title = ctk.CTkLabel(self, text="Download", font=("Segoe UI Bold", 24))
+        self.title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
+
+
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -154,6 +162,9 @@ class App(ctk.CTk):
 
         self.playlist_frame = Playlist(self)
         self.playlist_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
+
+        self.options = Options(self)
+        self.options.grid(row=3, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
 
 
 app = App()
