@@ -192,7 +192,6 @@ class App(ctk.CTk):
         self.options.grid(row=3, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
 
         def download():
-            print('bro')
             if self.options.kind.get() == "Single":
                 download_video(self.vid.url.get(), self.options.format.get(), self.options.folder.get())
             if self.options.kind.get() == "Playlist":
