@@ -103,6 +103,27 @@ def download_playlist(url, t, path, s, e):
         set_audio_metadata(metadata, 'p')
 
 
+class DownloadOut(ctk.CTkFrame):
+    def __init__(self, master, url):
+        super().__init__(master)
+
+        with yt_dlp.YoutubeDL() as ydl:
+            title = ydl.extract_info(url, download=False)["title"]
+
+        self.title = ctk.CTkLabel(self, text=title, font=("Segoe UI Bold", 24))
+        self.title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
+
+        self.bar_label = ctk.CTkLabel(self, text="Progress", font=("Segoe UI Bold", 14))
+        self.bar = ctk.CTkProgressBar(self, orientation="horizontal")
+        self.bar_label.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nw")
+        self.bar.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="nw")
+
+        self.text_label = ctk.CTkLabel(self, text="Output", font=("Segoe UI Bold", 14))
+        self.text = ctk.CTkTextbox(self)
+        self.text_label.grid(row=2, column=0, padx=10, pady=(0, 10), sticky="nw")
+        self.text.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="nw")
+
+
 class Vid(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
@@ -194,10 +215,14 @@ class App(ctk.CTk):
 
         def download():
             if self.options.kind.get() == "Single":
+                self.progress = DownloadOut(self, self.vid.url.get())
+                self.progress.grid(row=4, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
                 videodl = threading.Thread(target=download_video, args=(self.vid.url.get(), self.options.format.get(),
                                                                         self.options.folder.get()))
                 videodl.start()
             if self.options.kind.get() == "Playlist":
+                self.progress = DownloadOut(self, self.playlist.url.get())
+                self.progress.grid(row=4, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
                 playlistdl = threading.Thread(target=download_playlist(self.playlist.url.get(),
                                                                        self.options.format.get(),
                                                                        self.options.folder.get(),
