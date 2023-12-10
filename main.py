@@ -1,5 +1,6 @@
-import os, yt_dlp, music_tag
+import yt_dlp, music_tag
 import customtkinter as ctk
+import threading
 currently_downloading = False
 
 
@@ -193,10 +194,16 @@ class App(ctk.CTk):
 
         def download():
             if self.options.kind.get() == "Single":
-                download_video(self.vid.url.get(), self.options.format.get(), self.options.folder.get())
+                videodl = threading.Thread(target=download_video, args=(self.vid.url.get(), self.options.format.get(),
+                                                                        self.options.folder.get()))
+                videodl.start()
             if self.options.kind.get() == "Playlist":
-                download_playlist(self.playlist.url.get(), self.options.format.get(), self.options.folder.get(),
-                                  self.playlist.start.get(), self.playlist.end.get())
+                playlistdl = threading.Thread(target=download_playlist(self.playlist.url.get(),
+                                                                       self.options.format.get(),
+                                                                       self.options.folder.get(),
+                                                                       self.playlist.start.get(),
+                                                                       self.playlist.end.get()))
+                playlistdl.start()
 
         self.options.download.configure(command=download)
 
