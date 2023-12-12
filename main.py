@@ -197,31 +197,42 @@ class App(ctk.CTk):
         super().__init__()
         ctk.set_appearance_mode("dark")
 
+        self.scrolling_canvas = ctk.CTkCanvas(self)
+        self.scrolling_canvas.pack(side=ctk.LEFT, fill=ctk.BOTH, expand=1)
+
+        self.scrollbar = ctk.CTkScrollbar(self, command=self.scrolling_canvas.yview)
+        self.scrollbar.pack(side=ctk.RIGHT, fill=ctk.Y)
+
+        self.scrolling_canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        self.main = ctk.CTkFrame(self.scrolling_canvas)
+        self.main.pack(fill=ctk.BOTH, expand=1)
+
         self.title("Youtube Downloader")
         self.geometry(f"{int(self.winfo_screenwidth())//2}x{int(self.winfo_screenheight())//2}")
 
-        self.title = ctk.CTkLabel(self, text="Youtube Downloader", font=("Segoe UI Bold", 48))
+        self.title = ctk.CTkLabel(self.main, text="Youtube Downloader", font=("Segoe UI Bold", 48))
         self.title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
         self.grid_columnconfigure(0, weight=1)
 
-        self.vid = Vid(self)
+        self.vid = Vid(self.main)
         self.vid.grid(row=1, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
 
-        self.playlist = Playlist(self)
+        self.playlist = Playlist(self.main)
         self.playlist.grid(row=2, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
 
-        self.options = Options(self)
+        self.options = Options(self.main)
         self.options.grid(row=3, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
 
         def download():
             if self.options.kind.get() == "Single":
-                self.progress = DownloadOut(self, self.vid.url.get())
+                self.progress = DownloadOut(self.main, self.vid.url.get())
                 self.progress.grid(row=4, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
                 videodl = threading.Thread(target=download_video, args=(self.vid.url.get(), self.options.format.get(),
                                                                         self.options.folder.get()))
                 videodl.start()
             if self.options.kind.get() == "Playlist":
-                self.progress = DownloadOut(self, self.playlist.url.get())
+                self.progress = DownloadOut(self.main, self.playlist.url.get())
                 self.progress.grid(row=4, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
                 playlistdl = threading.Thread(target=download_playlist(self.playlist.url.get(),
                                                                        self.options.format.get(),
