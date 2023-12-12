@@ -203,10 +203,20 @@ class App(ctk.CTk):
         self.scrollbar = ctk.CTkScrollbar(self, command=self.scrolling_canvas.yview)
         self.scrollbar.pack(side=ctk.RIGHT, fill=ctk.Y)
 
-        self.scrolling_canvas.configure(yscrollcommand=self.scrollbar.set)
+        def frame_width(event):
+            # resize inner frame to canvas size
+            canvas_width = event.width
+            self.scrolling_canvas.itemconfig(self.main, width=canvas_width)
+
+        def resize(event=None):
+            self.scrolling_canvas.configure(scrollregion=self.scrolling_canvas.bbox('all'))
 
         self.main = ctk.CTkFrame(self.scrolling_canvas)
         self.main.pack(fill=ctk.BOTH, expand=1)
+
+        self.scrolling_canvas.configure(yscrollcommand=self.scrollbar.set)
+        self.main.bind('<Configure>', resize)
+        self.scrollbar.bind('<Configure>', frame_width)
 
         self.title("Youtube Downloader")
         self.geometry(f"{int(self.winfo_screenwidth())//2}x{int(self.winfo_screenheight())//2}")
