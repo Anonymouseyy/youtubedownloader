@@ -197,7 +197,7 @@ class App(ctk.CTk):
         super().__init__()
         ctk.set_appearance_mode("dark")
 
-        self.main = ctk.CTkScrollableFrame(self)
+        self.main = ctk.CTkScrollableFrame(self, fg_color="transparent")
         self.main.pack(fill=ctk.BOTH, expand=1)
 
         self.title("Youtube Downloader")
