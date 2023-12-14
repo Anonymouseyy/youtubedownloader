@@ -14,13 +14,13 @@ def set_audio_metadata(data, t):
             if data.get(f'{i}'):
                 if i == 'track':
                     f['tracktitle'] = data['track']
-                    print(data['track'])
+                    # print(data['track'])
                 elif i == 'release_year':
                     f['year'] = data[f'{i}']
-                    print(data[f'{i}'])
+                    # print(data[f'{i}'])
                 else:
                     f[f'{i}'] = data[f'{i}']
-                    print(data[f'{i}'])
+                    # print(data[f'{i}'])
 
         f.save()
 
@@ -36,24 +36,29 @@ def set_audio_metadata(data, t):
                 if song.get(f'{i}'):
                     if i == 'track':
                         f['tracktitle'] = song['track']
-                        print(song['track'])
+                        # print(song['track'])
                     elif i == 'release_year':
                         f['year'] = song[f'{i}']
-                        print(song[f'{i}'])
+                        # print(song[f'{i}'])
                     else:
                         f[f'{i}'] = song[f'{i}']
-                        print(song[f'{i}'])
+                        # print(song[f'{i}'])
 
             f.save()
 
 
 def download_video(url, t, path):
+    def hook(d):
+        print(d['status'])
+
     if t == 'Audio':
         ydl_opts = {
+            'quiet': True,
             'ffmpeg_location': 'C:/ffmpeg/bin',
             'format': 'bestaudio/best',
             'audioformat': 'mp3',
             'outtmpl': f'{path}/%(title)s.%(ext)s',
+            'progress_hooks': [hook],
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
@@ -61,6 +66,7 @@ def download_video(url, t, path):
         }
     else:
         ydl_opts = {
+            'quiet': True,
             'format': 'mp4/bestvideo/best',
             'outtmpl': f'{path}/%(title)s.%(ext)s',
         }
@@ -75,6 +81,8 @@ def download_video(url, t, path):
 def download_playlist(url, t, path, s, e):
     if t == 'Audio':
         ydl_opts = {
+            'quiet': True,
+            'no-progress': True,
             'ffmpeg_location': 'C:/ffmpeg/bin',
             'format': 'bestaudio/best',
             'outtmpl': f'{path}/%(title)s.%(ext)s',
@@ -88,6 +96,7 @@ def download_playlist(url, t, path, s, e):
         }
     else:
         ydl_opts = {
+            'quiet': True,
             'format': 'mp4/bestvideo/best',
             'outtmpl': f'{path}/%(title)s.%(ext)s',
             'playliststart': s,
@@ -96,8 +105,6 @@ def download_playlist(url, t, path, s, e):
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         metadata = ydl.extract_info(url)
-
-    print(metadata)
 
     if t == 'Audio':
         set_audio_metadata(metadata, 'p')
