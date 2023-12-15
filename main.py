@@ -47,9 +47,10 @@ def set_audio_metadata(data, t):
             f.save()
 
 
-def download_video(url, t, path):
+def download_video(url, t, path, progress):
     def hook(d):
-        print(d['status'])
+        if d['status'] == 'downloading':
+            progress.bar.set(d['downloaded_bytes']/d['total_bytes_estimate'])
 
     if t == 'Audio':
         ydl_opts = {
@@ -68,6 +69,7 @@ def download_video(url, t, path):
         ydl_opts = {
             'quiet': True,
             'format': 'mp4/bestvideo/best',
+            'progress_hooks': [hook],
             'outtmpl': f'{path}/%(title)s.%(ext)s',
         }
 
@@ -78,7 +80,7 @@ def download_video(url, t, path):
         set_audio_metadata(metadata, 'v')
 
 
-def download_playlist(url, t, path, s, e):
+def download_playlist(url, t, path, s, e, progress):
     if t == 'Audio':
         ydl_opts = {
             'quiet': True,
@@ -223,21 +225,27 @@ class App(ctk.CTk):
         self.options = Options(self.main)
         self.options.grid(row=3, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
 
+        self.progresses = dict()
+
         def download():
             if self.options.kind.get() == "Single":
-                self.progress = DownloadOut(self.main, self.vid.url.get())
-                self.progress.grid(row=4, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
+                self.progresses[f'{self.vid.url.get()}'] = DownloadOut(self.main, self.vid.url.get())
+                self.progresses[f'{self.vid.url.get()}'].grid(row=4, column=0, padx=10, pady=10, sticky="nsew",
+                                                              columnspan=2)
                 videodl = threading.Thread(target=download_video, args=(self.vid.url.get(), self.options.format.get(),
-                                                                        self.options.folder.get()))
+                                                                        self.options.folder.get(),
+                                                                        self.progresses[f'{self.vid.url.get()}']))
                 videodl.start()
             if self.options.kind.get() == "Playlist":
-                self.progress = DownloadOut(self.main, self.playlist.url.get())
-                self.progress.grid(row=4, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
+                self.progresses[f'{self.playlist.url.get()}'] = DownloadOut(self.main, self.playlist.url.get())
+                self.progresses[f'{self.playlist.url.get()}'].grid(row=4, column=0, padx=10, pady=10, sticky="nsew",
+                                                                   columnspan=2)
                 playlistdl = threading.Thread(target=download_playlist(self.playlist.url.get(),
                                                                        self.options.format.get(),
                                                                        self.options.folder.get(),
                                                                        self.playlist.start.get(),
-                                                                       self.playlist.end.get()))
+                                                                       self.playlist.end.get(),
+                                                                       self.progresses[f'{self.playlist.url.get()}']))
                 playlistdl.start()
 
         self.options.download.configure(command=download)
