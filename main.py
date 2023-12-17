@@ -119,6 +119,8 @@ class DownloadOut(ctk.CTkFrame):
         with yt_dlp.YoutubeDL() as ydl:
             title = ydl.extract_info(url, download=False)["title"]
 
+        title = title if len(title) < 10 else title[:7]+"..."
+
         self.title = ctk.CTkLabel(self, text=title, font=("Segoe UI Bold", 24))
         self.title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
 
