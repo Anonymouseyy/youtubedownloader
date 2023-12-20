@@ -49,8 +49,10 @@ def set_audio_metadata(data, t):
 
 def download_video(url, t, path, progress):
     def hook(d):
-        if d['status'] == 'downloading':
-            progress.bar.set(d['downloaded_bytes']/d['total_bytes_estimate'])
+        print("123123123")
+        print(d)
+        #if d['status'] == 'downloading':
+            #progress.bar.set(d['downloaded_bytes']/d['total_bytes_estimate'])
 
     if t == 'Audio':
         ydl_opts = {
@@ -119,20 +121,24 @@ class DownloadOut(ctk.CTkFrame):
         with yt_dlp.YoutubeDL() as ydl:
             title = ydl.extract_info(url, download=False)["title"]
 
-        title = title if len(title) < 10 else title[:7]+"..."
+        title = title if len(title) < 50 else title[:47]+"..."
 
         self.title = ctk.CTkLabel(self, text=title, font=("Segoe UI Bold", 24))
-        self.title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
+        self.title.grid(row=0, column=0, padx=10, pady=10, sticky="nw", columnspan=3)
 
         self.bar_label = ctk.CTkLabel(self, text="Progress", font=("Segoe UI Bold", 14))
         self.bar = ctk.CTkProgressBar(self, orientation="horizontal")
-        self.bar_label.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="nw")
-        self.bar.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="nw")
+        self.bar_percent = ctk.CTkLabel(self, text="0.0%", font=("Segoe UI Bold", 10))
+        self.bar_label.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="w")
+        self.bar.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="ew")
+        self.bar_percent.grid(row=1, column=3, padx=10, pady=(0, 10), sticky="ew")
 
-        self.text_label = ctk.CTkLabel(self, text="Output", font=("Segoe UI Bold", 14))
-        self.text = ctk.CTkTextbox(self)
-        self.text_label.grid(row=2, column=0, padx=10, pady=(0, 10), sticky="nw")
-        self.text.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="nw")
+        self.bar_label = ctk.CTkLabel(self, text="ETA: ", font=("Segoe UI Bold", 14))
+        self.bar = ctk.CTkLabel(self, text="Speed: ", font=("Segoe UI Bold", 14))
+        self.bar_percent = ctk.CTkLabel(self, text="Total Size: ", font=("Segoe UI Bold", 14))
+        self.bar_label.grid(row=2, column=0, padx=10, pady=(0, 10), sticky="w")
+        self.bar.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="w")
+        self.bar_percent.grid(row=2, column=3, padx=10, pady=(0, 10), sticky="w")
 
 
 class Vid(ctk.CTkFrame):
@@ -216,7 +222,6 @@ class App(ctk.CTk):
 
         self.title = ctk.CTkLabel(self.main, text="Youtube Downloader", font=("Segoe UI Bold", 48))
         self.title.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
-        self.grid_columnconfigure(0, weight=1)
 
         self.vid = Vid(self.main)
         self.vid.grid(row=1, column=0, padx=10, pady=10, sticky="nsew", columnspan=2)
