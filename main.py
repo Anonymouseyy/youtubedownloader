@@ -49,10 +49,14 @@ def set_audio_metadata(data, t):
 
 def download_video(url, t, path, progress):
     def hook(d):
-        print("123123123")
-        print(d)
-        #if d['status'] == 'downloading':
-            #progress.bar.set(d['downloaded_bytes']/d['total_bytes_estimate'])
+        if d['status'] == 'downloading':
+            percent = float(d["_percent_str"].strip("% "))/100
+            progress.bar.set(percent)
+            progress.bar_percent.configure(text=f"{percent*100}%")
+
+            progress.eta.configure(text=f"ETA: {d['_eta_str'].strip()}")
+            progress.speed.configure(text=f"Speed: {d['_speed_str'].strip()}")
+            progress.size.configure(text=f"Total Speed: {d['_total_bytes_str'].strip()}")
 
     if t == 'Audio':
         ydl_opts = {
@@ -133,12 +137,12 @@ class DownloadOut(ctk.CTkFrame):
         self.bar.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="ew")
         self.bar_percent.grid(row=1, column=3, padx=10, pady=(0, 10), sticky="ew")
 
-        self.bar_label = ctk.CTkLabel(self, text="ETA: ", font=("Segoe UI Bold", 14))
-        self.bar = ctk.CTkLabel(self, text="Speed: ", font=("Segoe UI Bold", 14))
-        self.bar_percent = ctk.CTkLabel(self, text="Total Size: ", font=("Segoe UI Bold", 14))
-        self.bar_label.grid(row=2, column=0, padx=10, pady=(0, 10), sticky="w")
-        self.bar.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="w")
-        self.bar_percent.grid(row=2, column=3, padx=10, pady=(0, 10), sticky="w")
+        self.eta = ctk.CTkLabel(self, text="ETA: ", font=("Segoe UI Bold", 14))
+        self.speed = ctk.CTkLabel(self, text="Speed: ", font=("Segoe UI Bold", 14))
+        self.size = ctk.CTkLabel(self, text="Total Size: ", font=("Segoe UI Bold", 14))
+        self.eta.grid(row=2, column=0, padx=10, pady=(0, 10), sticky="w")
+        self.speed.grid(row=2, column=1, padx=10, pady=(0, 10), sticky="w")
+        self.size.grid(row=2, column=3, padx=10, pady=(0, 10), sticky="w")
 
 
 class Vid(ctk.CTkFrame):
