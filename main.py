@@ -135,7 +135,7 @@ class DownloadOut(ctk.CTkFrame):
         self.bar_percent = ctk.CTkLabel(self, text="0.0%", font=("Segoe UI Bold", 10))
         self.bar_label.grid(row=1, column=0, padx=10, pady=(0, 10), sticky="w")
         self.bar.grid(row=1, column=1, padx=10, pady=(0, 10), sticky="ew")
-        self.bar_percent.grid(row=1, column=3, padx=10, pady=(0, 10), sticky="ew")
+        self.bar_percent.grid(row=1, column=3, padx=10, pady=(0, 10), sticky="w")
 
         self.eta = ctk.CTkLabel(self, text="ETA: ", font=("Segoe UI Bold", 14))
         self.speed = ctk.CTkLabel(self, text="Speed: ", font=("Segoe UI Bold", 14))
