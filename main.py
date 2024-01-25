@@ -87,6 +87,16 @@ def download_video(url, t, path, progress):
 
 
 def download_playlist(url, t, path, s, e, progress):
+    def hook(d):
+        if d['status'] == 'downloading':
+            percent = float(d["_percent_str"].strip("% "))/100
+            progress.bar.set(percent)
+            progress.bar_percent.configure(text=f"{percent*100}%")
+
+            progress.eta.configure(text=f"ETA: {d['_eta_str'].strip()}")
+            progress.speed.configure(text=f"Speed: {d['_speed_str'].strip()}")
+            progress.size.configure(text=f"Total Speed: {d['_total_bytes_str'].strip()}")
+
     if t == 'Audio':
         ydl_opts = {
             'quiet': True,
@@ -97,6 +107,7 @@ def download_playlist(url, t, path, s, e, progress):
             'audioformat': 'mp3',
             'playliststart': s,
             'playlistend': e,
+            'progress_hooks': [hook],
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
@@ -109,6 +120,7 @@ def download_playlist(url, t, path, s, e, progress):
             'outtmpl': f'{path}/%(title)s.%(ext)s',
             'playliststart': s,
             'playlistend': e,
+            'progress_hooks': [hook]
         }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -119,11 +131,15 @@ def download_playlist(url, t, path, s, e, progress):
 
 
 class DownloadOut(ctk.CTkFrame):
-    def __init__(self, master, url):
+    def __init__(self, master, url, kind):
         super().__init__(master)
 
-        with yt_dlp.YoutubeDL() as ydl:
-            title = ydl.extract_info(url, download=False)["title"]
+        if kind == "vid":
+            with yt_dlp.YoutubeDL() as ydl:
+                title = ydl.extract_info(url, download=False)["title"]
+        if kind == "list":
+            with yt_dlp.YoutubeDL({'playliststart': 1, 'playlistend': 2}) as ydl:
+                title = ydl.extract_info(url, download=False)["title"]
 
         title = title if len(title) < 50 else title[:47]+"..."
 
@@ -240,7 +256,7 @@ class App(ctk.CTk):
 
         def download():
             if self.options.kind.get() == "Single":
-                self.progresses[f'{self.vid.url.get()}'] = DownloadOut(self.main, self.vid.url.get())
+                self.progresses[f'{self.vid.url.get()}'] = DownloadOut(self.main, self.vid.url.get(), "vid")
                 self.progresses[f'{self.vid.url.get()}'].grid(row=4, column=0, padx=10, pady=10, sticky="nsew",
                                                               columnspan=2)
                 videodl = threading.Thread(target=download_video, args=(self.vid.url.get(), self.options.format.get(),
@@ -248,7 +264,7 @@ class App(ctk.CTk):
                                                                         self.progresses[f'{self.vid.url.get()}']))
                 videodl.start()
             if self.options.kind.get() == "Playlist":
-                self.progresses[f'{self.playlist.url.get()}'] = DownloadOut(self.main, self.playlist.url.get())
+                self.progresses[f'{self.playlist.url.get()}'] = DownloadOut(self.main, self.playlist.url.get(), "list")
                 self.progresses[f'{self.playlist.url.get()}'].grid(row=4, column=0, padx=10, pady=10, sticky="nsew",
                                                                    columnspan=2)
                 playlistdl = threading.Thread(target=download_playlist(self.playlist.url.get(),
