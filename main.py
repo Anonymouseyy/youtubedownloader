@@ -90,13 +90,14 @@ def download_video(url, t, path, progress):
 def download_playlist(url, t, path, s, e, progress):
     def hook(d):
         if d['status'] == 'downloading':
-            percent = float(d["_percent_str"].strip("% "))/100
+            ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+            percent = float(ansi_escape.sub('', d["_percent_str"]).strip("% ")) / 100
             progress.bar.set(percent)
             progress.bar_percent.configure(text=f"{percent*100}%")
 
-            progress.eta.configure(text=f"ETA: {d['_eta_str'].strip()}")
-            progress.speed.configure(text=f"Speed: {d['_speed_str'].strip()}")
-            progress.size.configure(text=f"Total Speed: {d['_total_bytes_str'].strip()}")
+            progress.eta.configure(text=f"ETA: {ansi_escape.sub('', d['_eta_str']).strip()}")
+            progress.speed.configure(text=f"Speed: {ansi_escape.sub('', d['_speed_str']).strip()}")
+            progress.size.configure(text=f"Total Speed: {ansi_escape.sub('', d['_total_bytes_str']).strip()}")
 
     if t == 'Audio':
         ydl_opts = {
