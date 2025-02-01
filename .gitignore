@@ -130,3 +130,5 @@ dmypy.json
 
 # Expirimentation file
 test.py
+
+*.txt

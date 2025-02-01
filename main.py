@@ -62,7 +62,6 @@ def download_video(url, t, path, progress):
     if t == 'Audio':
         ydl_opts = {
             'quiet': True,
-            'ffmpeg_location': 'C:/ffmpeg/bin',
             'format': 'bestaudio/best',
             'audioformat': 'mp3',
             'outtmpl': f'{path}/%(title)s.%(ext)s',
@@ -103,7 +102,6 @@ def download_playlist(url, t, path, s, e, progress):
         ydl_opts = {
             'quiet': True,
             'no-progress': True,
-            'ffmpeg_location': 'C:/ffmpeg/bin',
             'format': 'bestaudio/best',
             'outtmpl': f'{path}/%(title)s.%(ext)s',
             'audioformat': 'mp3',
